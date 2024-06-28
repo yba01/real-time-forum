@@ -33,13 +33,13 @@ type historyMessage struct {
 var WsUsers = make(map[string]*websocket.Conn)
 
 func HandleWebsocket(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		return
-	}
 	_, Session, err1 := Authenticated(w, r)
 	if err1 != nil {
 		Error500(w)
+		return
+	}
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
 		return
 	}
 
