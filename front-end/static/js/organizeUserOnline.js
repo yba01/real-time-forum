@@ -41,7 +41,6 @@ const ordered = (data,sender) => {
     let obj2 = {}
     if (forms) {
         forms.forEach((form, i) => {
-            console.log(i, form);
             let user = data[i]
 
             form.id = `ws${user}`
@@ -51,7 +50,6 @@ const ordered = (data,sender) => {
                 button.id = `wsStatus${user}`
                 let Notif = button.querySelector(".notification")
                 let Notifid = Notif.id.slice(5)
-                console.log(Notif.style.display);
                 let dis = Notif.style.display
                 if (button.classList.contains("activeUsers")){
                     button.classList.remove("activeUsers")
@@ -61,7 +59,6 @@ const ordered = (data,sender) => {
                     obj[Notifid] = dis
                 }
                 button.textContent = user
-                console.log(button.textContent);
                 Notif.id = `notif${user}`
                 button.appendChild(Notif)
                 
@@ -80,9 +77,5 @@ const ordered = (data,sender) => {
         let butt = document.getElementById(`wsStatus${key}`) 
         butt.classList.remove("unactiveUsers")
         butt.classList.add(value)
-        console.log(key);
-        console.log(value);
     }
-    console.log(pnotif);
-    console.log(obj,obj2);
 }

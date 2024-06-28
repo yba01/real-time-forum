@@ -7,14 +7,11 @@ import { OrganizeOnlineUser } from "./organizeUserOnline.js";
 export let socket
 
 export function createWebsocket() {
-    console.log('creating socket');
     
-    console.log(location.host);
     socket = new WebSocket(`ws:${location.host}/ws`)
     const sendButton = document.getElementById('sendButton')
     let messageInput = document.getElementById('messageInput')
     socket.onopen = (e) => {
-        console.log('web socket opened');
         sendButton.addEventListener('click', () => {
             sendMessage(socket)
             let sender = document.getElementById("user")
@@ -29,37 +26,31 @@ export function createWebsocket() {
         messageInput.addEventListener('input', _.throttle(() => sendTyping(socket), 500));
     }
     socket.onclose = () => {
-        console.log("close socket");
     }
     socket.onmessage = (e) => {
         let data = JSON.parse(e.data)
 
         if (data.Type == "status") {
-            console.log("online");
             insertUsers(data)
             return
         }
 
         if (data.Type == "typing") {
-            console.log("typing");
             animeTyping(data);
             return
         }
 
         if (data.Type == "history") {
-            console.log('retrieving the story');
             retrieveStory(data)
             return
         }
 
         if (data.Type == "notifs") {
             notifsDisplay(data)
-            console.log('displaying notifs');
             return
         }
         OrganizeOnlineUser(data.Sender)
         setTimeout(() => {
-            console.log(data.Receiver, data.Read, data.Sender);
             let output = document.getElementById(`WsChatroom${data.Sender}`)
             if (!(data.Read)) {
                 let notif = document.getElementById(`notif${data.Sender}`)
@@ -83,10 +74,13 @@ function sendMessage(socket) {
     };
     let receiver = document.getElementById('WsUserMessage')
     let sender = document.getElementById("user")
-    let now = new Date()
-    let hours = now.getHours();
-    let minutes = now.getMinutes();
-    let currentTime = `${hours}:${minutes}`;
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = String(now.getMonth() + 1).padStart(2, '0');
+    let day = String(now.getDate()).padStart(2, '0');
+    let hours = String(now.getHours()).padStart(2, '0');
+    let minutes = String(now.getMinutes()).padStart(2, '0');
+    let currentTime = `${year}-${month}-${day} ${hours}:${minutes}`;
     message.Receiver = receiver.textContent
     message.Content = `${sender.textContent}:${currentTime}:${messageInput.value}`
     message.Sender = sender.textContent
@@ -135,9 +129,7 @@ export function openChatRoom(url) {
     notif.style.display = 'none'
     userSent.innerHTML = recievingUser
     let button = document.getElementById(`wsStatus${userSent.textContent}`)
-    console.log(userSent);
     let sendbutton = document.getElementById(`WsMessageSend`)
-    console.log(button.classList.contains('activeUsers'));
     if (button.classList.contains('activeUsers')) {
         sendbutton.style.display = 'flex'
     } else {

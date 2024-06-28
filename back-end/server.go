@@ -18,7 +18,6 @@ func ServerRun() {
 	}
 	// send a template
 	if tmpl == nil {
-		fmt.Println("Error Parsing file")
 		return
 	}
 	Tmpl = tmpl
@@ -29,7 +28,6 @@ func ServerRun() {
 	}
 
 	if InitDB == nil {
-		fmt.Println("Error Opening database")
 		return
 	}
 	DB = InitDB

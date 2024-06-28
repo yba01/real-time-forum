@@ -19,7 +19,6 @@ let content
 let end = 10
 let preend = 10
 export function retrieveStory(data) {
-    console.log(end);
     content =data
     let output = document.getElementById(`WsChatroom${data.Sender}`)
     let sender = data.Sender
@@ -31,7 +30,6 @@ export function retrieveStory(data) {
     if(data.Content){
         let reversedContent = data.Content.slice(0, end)
         for (let oneMess of (reversedContent).reverse()) {
-            console.log('retrieving the story')
             if ((oneMess.Content).startsWith(sender)) {
                 output.innerHTML += `<p class="WsRight">${oneMess.Content}</p>`
             } else {
@@ -78,7 +76,6 @@ export function notification(socket) {
 export function notifsDisplay(data) {
     if (data.Content) {
         for (let unRead of data.Content) {
-                console.log(unRead.Sender);
                 let notif = document.getElementById(`notif${unRead.Sender}`)
                 notif.style.display ='flex'
         }

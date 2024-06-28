@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -56,7 +55,6 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 
 	er := Num.Scan(&NumMsg)
 	if er != nil {
-		fmt.Println(er.Error())
 		return
 	}
 
@@ -101,7 +99,6 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 
 		for Senders.Next() {
 			var sender, receiver string
-			fmt.Println("1")
 			Senders.Scan(&sender, &receiver)
 			if sender != sess.Username {
 				if !IsHere(sender, order) {
@@ -114,7 +111,6 @@ func Forum(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			fmt.Println(sender, receiver)
 		}
 
 		forumpage.AllUsers = OrderSentMsg(order, forumpage.AllUsers)

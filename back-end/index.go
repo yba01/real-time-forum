@@ -13,7 +13,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	// c, _, err := Authenticated(w, r)
 
 	// if c != nil || err != nil {
-	// 	fmt.Println("ok")
 	// 	return
 	// }
 	if er := ExeTemp(w, "index.html", nil); er != nil {

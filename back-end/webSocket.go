@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -17,7 +16,7 @@ type message struct {
 	Content  string
 	Sender   string
 	Receiver string
-	Read bool
+	Read     bool
 }
 type Online struct {
 	Type        string
@@ -34,10 +33,8 @@ type historyMessage struct {
 var WsUsers = make(map[string]*websocket.Conn)
 
 func HandleWebsocket(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("in websocket")
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		fmt.Println(err.Error())
 		return
 	}
 	_, Session, err1 := Authenticated(w, r)
@@ -56,7 +53,6 @@ func handleMessages(conn *websocket.Conn) {
 		var msg message
 		err := conn.ReadJSON(&msg)
 		if err != nil {
-			fmt.Println(err.Error())
 			return
 		}
 		if msg.Type == "message" {
@@ -67,11 +63,9 @@ func handleMessages(conn *websocket.Conn) {
 			TypingSend(msg)
 		}
 		if msg.Type == "history" {
-			fmt.Println("gettin history")
 			getMessagesBetweenUsers(DB, msg.Sender, msg.Receiver)
 		}
 		if msg.Type == "notification" {
-			fmt.Println("gettin notifs")
 			getUnreadMessages(DB, msg.Sender)
 		}
 	}
@@ -81,7 +75,6 @@ func privateMessageSend(msg message) {
 	for user, conn := range WsUsers {
 		if user == msg.Receiver {
 			if err := conn.WriteJSON(msg); err != nil {
-				fmt.Println(err.Error())
 				return
 			}
 			insertMessage(DB, msg)
@@ -95,7 +88,6 @@ func TypingSend(msg message) {
 	for user, conn := range WsUsers {
 		if user == msg.Receiver {
 			if err := conn.WriteJSON(msg); err != nil {
-				fmt.Println(err)
 				return
 			}
 		}
@@ -113,7 +105,7 @@ func IamConnected(me string) {
 		if user != me {
 			if conn != nil {
 				if err := conn.WriteJSON(onl); err != nil {
-					fmt.Println(err)
+					return
 				}
 			}
 
@@ -129,7 +121,7 @@ func IamConnected(me string) {
 					Me:   user,
 				}
 				if err := MyConn.WriteJSON(onl); err != nil {
-					fmt.Println(err)
+					return
 				}
 			}
 		}
@@ -146,11 +138,11 @@ func IamDisConnected(me string) {
 	}
 	//all user need to know who i am disconneted
 	for _, conn := range WsUsers {
-		if conn != nil{
+		if conn != nil {
 			if err := conn.WriteJSON(onl); err != nil {
-				fmt.Println(err)
+				return
 			}
 		}
-		
+
 	}
 }

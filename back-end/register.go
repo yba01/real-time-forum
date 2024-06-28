@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"net/http"
 	"regexp"
 	"strings"
@@ -56,7 +55,6 @@ func RegisterAuth(w http.ResponseWriter, r *http.Request) {
 			BadCri: true,
 		}
 		sendFront(w, api, code206)
-		fmt.Println("1")
 		return
 	}
 	if !CheckEmail(email) {
@@ -64,26 +62,22 @@ func RegisterAuth(w http.ResponseWriter, r *http.Request) {
 			BadEmail: true,
 		}
 		sendFront(w, api, code206)
-		fmt.Println("2")
 		return
 	}
 
 	er := IsNameExist(username)
 	e := IsEmailExist(email)
-	fmt.Println(er,e)
 	if er == nil || e == nil {
 		api := ApiRegister{
 			Unreg: true,
 		}
 		sendFront(w, api, code206)
-		fmt.Println("4")
 		return
 	}
 
 	errs := CreateUser(newUser)
 	if errs != nil {
 		Error500(w)
-		fmt.Println(errs)
 		return
 	}
 	api := ApiRegister{
@@ -152,7 +146,6 @@ func IsNameExist(name string) error {
 	if err1 != nil {
 		return err1
 	}
-	fmt.Println("name already exist")
 	return nil
 }
 func IsEmailExist(email string) error {
@@ -163,7 +156,6 @@ func IsEmailExist(email string) error {
 	if err2 != nil {
 		return err2
 	}
-	fmt.Println("email already exist")
 	return nil
 }
 

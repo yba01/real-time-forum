@@ -13,7 +13,6 @@ func Authenticated(w http.ResponseWriter, r *http.Request) (*http.Cookie, *Sessi
 	c, err := r.Cookie("session_token")
 
 	if err != nil {
-		fmt.Println("nil")
 		cook := ApiAuth{
 			NoAuth: true,
 		}
@@ -24,12 +23,10 @@ func Authenticated(w http.ResponseWriter, r *http.Request) (*http.Cookie, *Sessi
 	sessionID := c.Value
 	UserInfo, er := CheckSession(sessionID)
 	if er != sql.ErrNoRows && er != nil {
-		fmt.Println("2")
 		Error500(w)
 		return nil, nil, er
 	}
 	if er == sql.ErrNoRows {
-		fmt.Println("3")
 		DelCookie(w)
 		cook := ApiAuth{
 			NoAuth: true,
@@ -41,18 +38,15 @@ func Authenticated(w http.ResponseWriter, r *http.Request) (*http.Cookie, *Sessi
 	// EXPIRED_AT AND COMPARE IT WITH TIME.NOW()
 	exp, err := GetExpired_AT(sessionID)
 	if err != nil {
-		fmt.Println("4")
 		Error500(w)
 		return nil, nil, err
 	}
 	expiry, err := ParseTime(exp)
 	if err != nil {
-		fmt.Println("6")
 		Error500(w)
 		return nil, nil, err
 	}
 	if expiry.Before(time.Now().UTC()) {
-		fmt.Println("5")
 		IamDisConnected(UserInfo.Username)
 		e := DeleteSession(sessionID)
 		if e != nil {
@@ -66,7 +60,6 @@ func Authenticated(w http.ResponseWriter, r *http.Request) (*http.Cookie, *Sessi
 		sendFront(w, cook, 200)
 		return nil, nil, nil
 	}
-	fmt.Println("7")
 	return c, UserInfo, nil
 }
 

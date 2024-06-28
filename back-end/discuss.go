@@ -2,7 +2,6 @@ package internal
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 func insertMessage(db *sql.DB, message message) error {
@@ -23,80 +22,72 @@ func getMessagesBetweenUsers(db *sql.DB, user1, user2 string) {
         ORDER BY timestamp DESC
     `, user1, user2, user2, user1)
 	if err != nil {
-        fmt.Println(err.Error())
 		return
 	}
 	defer rows.Close()
 
-    var History historyMessage
+	var History historyMessage
 	for rows.Next() {
 		var message message
 		var timestamp string // If you want to handle the timestamp, you can add a field in the Message struct
 		if err := rows.Scan(&message.Type, &message.Content, &message.Sender, &message.Receiver, &timestamp, &message.Read); err != nil {
-            fmt.Println(err.Error())
 			return
 		}
 		History.Content = append(History.Content, message)
 	}
-    History.Type = "history"
-    History.Sender = user1
-    History.Receiver = user2
+	History.Type = "history"
+	History.Sender = user1
+	History.Receiver = user2
 	for user, conn := range WsUsers {
 		if user == user1 {
 			if err := conn.WriteJSON(History); err != nil {
-				fmt.Println(err)
 				return
 			}
 		}
 	}
 	markMessageAsRead(db, user1, user2)
-    fmt.Println(History.Content)
 }
 
-//jai rajoute dans la structure de message un boleen pour savoir si le message a
-//lu ou non du coup la jprends les messages qui ont ete non lu grace a cette fonction
+// jai rajoute dans la structure de message un boleen pour savoir si le message a
+// lu ou non du coup la jprends les messages qui ont ete non lu grace a cette fonction
 func getUnreadMessages(db *sql.DB, user string) {
-    rows, err := db.Query(`
+	rows, err := db.Query(`
         SELECT type, content, sender, receiver, alRead FROM messages
         WHERE receiver = ? AND alRead = 0
     `, user)
-    if err != nil {
-        fmt.Println(err.Error())
+	if err != nil {
 		return
-    }
-    defer rows.Close()
+	}
+	defer rows.Close()
 
-    var notifs historyMessage
-    for rows.Next() {
-        var msg message
-        var read int // Use int to fetch the boolean value from SQLite
-        if err := rows.Scan(&msg.Type, &msg.Content, &msg.Sender, &msg.Receiver, &read); err != nil {
-            fmt.Println(err.Error())
-        }
-        msg.Read = read != 0 // Convert integer to boolean
-       	notifs.Content = append(notifs.Content, msg)
-    }
+	var notifs historyMessage
+	for rows.Next() {
+		var msg message
+		var read int // Use int to fetch the boolean value from SQLite
+		if err := rows.Scan(&msg.Type, &msg.Content, &msg.Sender, &msg.Receiver, &read); err != nil {
+			return
+		}
+		msg.Read = read != 0 // Convert integer to boolean
+		notifs.Content = append(notifs.Content, msg)
+	}
 	notifs.Type = "notifs"
 	for user1, conn := range WsUsers {
 		if user == user1 {
 			if err := conn.WriteJSON(notifs); err != nil {
-				fmt.Println(err)
 				return
 			}
 		}
 	}
 }
 
-//Mets a jour la base de donnee pour les messages lues
+// Mets a jour la base de donnee pour les messages lues
 func markMessageAsRead(db *sql.DB, user1, user2 string) {
-	fmt.Println("reading message")
-    _, err := db.Exec(`
+	_, err := db.Exec(`
         UPDATE messages
 		SET alRead = 1
         WHERE (sender = ? AND receiver = ?)
-    `,user2, user1)
-	if err !=nil {
-		fmt.Println(err.Error())
+    `, user2, user1)
+	if err != nil {
 		return
 	}
 }

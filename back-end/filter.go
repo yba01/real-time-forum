@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -24,13 +23,11 @@ func Filterforum(w http.ResponseWriter, r *http.Request) {
 		Error500(w)
 		return
 	}
-	fmt.Println("we are filtering")
 	var NumMsg int
 	Num := DB.QueryRow("SELECT NumMsg from users WHERE username = ?", sess.Username)
 
 	er := Num.Scan(&NumMsg)
 	if er != nil {
-		fmt.Println(er.Error())
 		return
 	}
 
@@ -102,7 +99,6 @@ func Filterforum(w http.ResponseWriter, r *http.Request) {
 
 		for Senders.Next() {
 			var sender, receiver string
-			fmt.Println("1")
 			Senders.Scan(&sender, &receiver)
 			if sender != sess.Username {
 				if !IsHere(sender, order) {
@@ -115,7 +111,6 @@ func Filterforum(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			fmt.Println(sender, receiver)
 		}
 
 		forumpage.AllUsers = OrderSentMsg(order, forumpage.AllUsers)
@@ -127,7 +122,6 @@ func Filterforum(w http.ResponseWriter, r *http.Request) {
 	}
 	err = sendFront(w, forumpage, code200)
 	if err != nil {
-		fmt.Println("error")
 		return
 	}
 }
@@ -165,7 +159,6 @@ func CreatedPostFilter(w http.ResponseWriter, r *http.Request) {
 
 	er := Num.Scan(&NumMsg)
 	if er != nil {
-		fmt.Println(er.Error())
 		return
 	}
 
@@ -210,7 +203,6 @@ func CreatedPostFilter(w http.ResponseWriter, r *http.Request) {
 
 		for Senders.Next() {
 			var sender, receiver string
-			fmt.Println("1")
 			Senders.Scan(&sender, &receiver)
 			if sender != session.Username {
 				if !IsHere(sender, order) {
@@ -223,7 +215,6 @@ func CreatedPostFilter(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			fmt.Println(sender, receiver)
 		}
 
 		forumpage.AllUsers = OrderSentMsg(order, forumpage.AllUsers)
@@ -311,7 +302,6 @@ func LikedPostFilter(w http.ResponseWriter, r *http.Request) {
 
 	er := Num.Scan(&NumMsg)
 	if er != nil {
-		fmt.Println(er.Error())
 		return
 	}
 
@@ -328,7 +318,6 @@ func LikedPostFilter(w http.ResponseWriter, r *http.Request) {
 
 		for Senders.Next() {
 			var sender, receiver string
-			fmt.Println("1")
 			Senders.Scan(&sender, &receiver)
 			if sender != session.Username {
 				if !IsHere(sender, order) {
@@ -341,7 +330,6 @@ func LikedPostFilter(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 
-			fmt.Println(sender, receiver)
 		}
 
 		forumpage.AllUsers = OrderSentMsg(order, forumpage.AllUsers)

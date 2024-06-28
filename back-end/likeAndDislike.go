@@ -2,7 +2,6 @@ package internal
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -14,7 +13,6 @@ func ReactionHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post_id := r.URL.Query().Get("id")
-	fmt.Println(post_id)
 	c, Session, err := Authenticated(w, r)
 
 	if c == nil || err != nil || Session == nil {
@@ -28,7 +26,6 @@ func ReactionHandle(w http.ResponseWriter, r *http.Request) {
 	}
 	UserID := Session.User_ID
 	action := r.URL.Query().Get("action")
-	fmt.Println(action)
 	liked, disliked := 0, 0
 	switch action {
 	case "like":
@@ -46,7 +43,6 @@ func ReactionHandle(w http.ResponseWriter, r *http.Request) {
 		liked = 0
 		disliked = 0
 	}
-	fmt.Println(liked, disliked)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			_, err1 := DB.Exec("INSERT INTO reaction (user_id, post_id, liked, disliked) VALUES(?, ?, ?, ?)", UserID, post_id, liked, disliked)

@@ -2,14 +2,11 @@ package internal
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
-
-
 
 func LoginAuth(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
@@ -29,7 +26,6 @@ func LoginAuth(w http.ResponseWriter, r *http.Request) {
 
 	if err1 != sql.ErrNoRows && err1 != nil { // assure us that there are no errors in the database
 		Error500(w)
-		fmt.Println("lol")
 		return
 	}
 

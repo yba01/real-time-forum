@@ -31,14 +31,11 @@ export let routes = {
 // update the path into url and fetch html corresponding contains in the div
 const handleLocation = async () => {
     const path = window.location.pathname;
-    // console.log(Fetched);
     if ((path == '/' || path == '/forum') && !Fetched) {
-        console.log(Fetched);
         Fetched = true
         fetchAuth('auth')
         return
     }
-    //  console.log(path, "ok");
     let route = routes[path]
     if (!route) {
         fetchUrl(path)// handle the error url
@@ -66,8 +63,6 @@ document.addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.target.closest('form');
     const url = form.id
-    // console.log(url);
-    // console.log(typeof url);
     switch (url) {
         case "loginAuth":
             fetchLogin(url)
@@ -83,15 +78,12 @@ document.addEventListener("submit", (event) => {
             break
     }
     if (url.startsWith('comment')) {
-        console.log('in comment rn');
         fetchComment(url)
     }
     if (url.startsWith('reaction')) {
-        console.log('reacting');
         fetchLikeAndDislike(url)
     }
     if (url.startsWith('forumfilter')) {
-        console.log(url);
         routes["/"] = forumHtml
         Redirect('/')
         fetchForum(url)
@@ -109,7 +101,6 @@ home.addEventListener('click', () => {
     if (!document.getElementById("loginAuth")
         && !document.getElementById("registerAuth")
         && !document.getElementById('code')) {
-        //console.log("hello");
         fetchAuth("auth")// check if the user is authenticated
     }
 })

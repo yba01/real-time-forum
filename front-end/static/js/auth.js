@@ -8,14 +8,12 @@ export const fetchAuth = (url) => {
         method: 'POST' // ou 'POST' selon votre cas
     })
         .then(response => {
-            //  console.log(response);
             if (!response.ok) {
                 Redirect("/error")
             }
             return response.json()
         })
         .then(data => {
-            console.log(data);
             if (data.Error) {
                 Error()
                 return
@@ -31,12 +29,10 @@ export const fetchAuth = (url) => {
             }
             if (data.Token) {
                 if (!allPost) {
-                    console.log("1");
                     routes['/'] = forumHtml
                     Redirect('/')
                     fetchForum('forum')
                 } else {
-                    console.log("2");
                     routes['/'] = forumHtml
                     Redirect('/')
                     fetchForum('forum')

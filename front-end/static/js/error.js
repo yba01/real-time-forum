@@ -15,14 +15,12 @@ export const
             body: `${url}`
         })
             .then(response => {
-                console.log(response);
                 if (!response.ok) {
                     Redirect("/error")
                 }
                 return response.json()
             })
             .then(data => {
-                console.log(data);
                 if (data.Error) {
                     Error(data)
                     return

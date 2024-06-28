@@ -3,7 +3,6 @@ package internal
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io"
 	"net/http"
@@ -29,7 +28,7 @@ type ApiAuth struct {
 }
 
 type NewError struct {
-	Mess string
+	Mess  string
 	Error bool
 	Code  int
 }
@@ -39,7 +38,7 @@ type User struct {
 	Username     string
 	Age          int
 	Gender       string
-	Firstname     string
+	Firstname    string
 	Lastname     string
 	Email        string
 	Password     string
@@ -93,7 +92,7 @@ type post struct {
 type forumhome struct {
 	Allposts    []ppost
 	Categories  []string
-	AllUsers []string
+	AllUsers    []string
 	IsConnect   bool
 	Username    string
 	ErrorString string
@@ -120,13 +119,10 @@ type ApiRegister struct {
 func sendFront(w http.ResponseWriter, api interface{}, statusCode int) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
-	//fmt.Println(statusCode,api)
 	err := json.NewEncoder(w).Encode(api)
-	//fmt.Println("ok")
 	if err != nil {
 		// Utiliser http.Error pour envoyer un message d'erreur et un code de statut
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		fmt.Println("500")
 		return err
 	}
 	return nil

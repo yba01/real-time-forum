@@ -1,7 +1,6 @@
 import { fetchAuth } from "./auth.js";
 
 export const fetchLogout = (url) => {
-    console.log(url);
     fetch(url, {
         method: 'POST', // Définir la méthode de la requête comme POST
     })

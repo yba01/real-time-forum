@@ -26,7 +26,6 @@ export const fetchForum = (url) => {
                 Redirect("/")
                 return
             }
-            //        console.log(data);
             let user = document.getElementById("user")
             user.textContent = data.Username
             displayForum(data)
@@ -148,7 +147,6 @@ export function displayForum(fullData) {
 }
 
 export function InsertUsers(data) {
-    console.log(data.AllUsersConn);
     if (data.AllUsers) {
         for (let user of data.AllUsers) {
             //Create chatroom for user connect specifically to her name
