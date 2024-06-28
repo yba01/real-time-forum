@@ -8,7 +8,9 @@ export let socket
 
 export function createWebsocket() {
     console.log('creating socket');
-    socket = new WebSocket('ws://localhost:8081/ws')
+    
+    console.log(location.host);
+    socket = new WebSocket(`ws:${location.host}/ws`)
     const sendButton = document.getElementById('sendButton')
     let messageInput = document.getElementById('messageInput')
     socket.onopen = (e) => {
@@ -24,7 +26,7 @@ export function createWebsocket() {
         setTimeout(() => {
             notification(socket)
         }, 200)
-        messageInput.addEventListener('input', _.throttle(() => sendTyping(socket), 1000));
+        messageInput.addEventListener('input', _.throttle(() => sendTyping(socket), 500));
     }
     socket.onclose = () => {
         console.log("close socket");
@@ -191,6 +193,6 @@ function animeTyping(data) {
         for (var i = 0; i < divType.length; i++) {
             divType[i].classList.remove('dot')
         }
-    }, 700)
+    }, 400)
 
 }
