@@ -152,7 +152,7 @@ func IsNameExist(name string) error {
 	if err1 != nil {
 		return err1
 	}
-	fmt.Println("haha")
+	fmt.Println("name already exist")
 	return nil
 }
 func IsEmailExist(email string) error {
@@ -163,7 +163,7 @@ func IsEmailExist(email string) error {
 	if err2 != nil {
 		return err2
 	}
-	fmt.Println("hoho")
+	fmt.Println("email already exist")
 	return nil
 }
 
