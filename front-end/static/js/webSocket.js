@@ -7,7 +7,7 @@ import { OrganizeOnlineUser } from "./organizeUserOnline.js";
 export let socket
 
 export function createWebsocket() {
-    
+
     socket = new WebSocket(`ws:${location.host}/ws`)
     const sendButton = document.getElementById('sendButton')
     let messageInput = document.getElementById('messageInput')
@@ -39,6 +39,7 @@ export function createWebsocket() {
             animeTyping(data);
             return
         }
+
 
         if (data.Type == "history") {
             retrieveStory(data)
@@ -161,6 +162,22 @@ function displayMessage(message, receiver) {
     }
 
 }
+const stopTyping = _.debounce(() => {
+    let message2 = {
+        Type: "typing",
+        Content: "",
+        Sender: "",
+        Receiver: "",
+        Notyping: true,
+    };
+    let receiver = document.getElementById('WsUserMessage')
+    let sender = document.getElementById("user")
+    message2.Receiver = receiver.textContent
+    message2.Sender = sender.textContent
+    socket.send(JSON.stringify(message2))
+    console.log("ok")
+}, 700)
+
 function sendTyping(socket) {
     let message = {
         Type: "typing",
@@ -173,18 +190,34 @@ function sendTyping(socket) {
     message.Receiver = receiver.textContent
     message.Sender = sender.textContent
     socket.send(JSON.stringify(message))
+    stopTyping()
 }
+
+
 function animeTyping(data) {
-    let divType = document.getElementsByClassName(`anime`)
+    let chat = document.querySelector(`#type${data.Sender}`)
+    let divType = chat.getElementsByClassName("anime")
+    console.log(data);
+    if (data.Notyping) {
+        for (var i = 0; i < divType.length; i++) {
+            divType[i].classList.remove('dot')
+        }
+        return
+    }
+
     for (var i = 0; i < divType.length; i++) {
         if (!divType[i].classList.contains("dot")) {
             divType[i].classList.add('dot')
         }
     }
-    setTimeout(() => {
-        for (var i = 0; i < divType.length; i++) {
-            divType[i].classList.remove('dot')
-        }
-    }, 400)
 
 }
+
+// function stopTyping(data) {
+//     let chat = document.querySelector(`#type${data.Sender}`)
+//     let divType = chat.getElementsByClassName("anime")
+//     for (var i = 0; i < divType.length; i++) {
+//         divType[i].classList.remove('dot')
+//     }
+
+// }

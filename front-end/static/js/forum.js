@@ -149,6 +149,7 @@ export function displayForum(fullData) {
 export function InsertUsers(data) {
     if (data.AllUsers) {
         for (let user of data.AllUsers) {
+
             //Create chatroom for user connect specifically to her name
             let chatRoom = document.getElementById('chatOpened')
             let outChatroom = document.createElement('div')
@@ -157,6 +158,7 @@ export function InsertUsers(data) {
             outChatroom.style.display = 'none'
             outChatroom.classList = 'WsChatroom'
             chatRoom.insertBefore(outChatroom, last)
+
             //create button online users
             let allChatRoomDiv = document.getElementById('onlineUsers')
             let allUsers = document.createElement('div')
@@ -181,12 +183,23 @@ export function InsertUsers(data) {
             button.id = `wsStatus${user}`
             button.style.display = 'flex'
             notif.style.display = 'none'
+
             button.appendChild(notif)
 
 
+            //create a div for typing progress for all userConnect
+            let divType = document.createElement("div")
+            divType.classList = 'chat-bubble';
+            divType.id = `type${user}`
+            divType.innerHTML = `<div class="typing">
+                                 <div class="anime"></div>
+                                     <div class="anime"></div>
+                                     <div class="anime"></div>
+                                         </div>`
 
             //Appending                            
             form.appendChild(button)
+            form.appendChild(divType)
 
             allChatRoomDiv.appendChild(form)
             outChatroom.addEventListener('scroll', debounce(function () {
@@ -195,16 +208,8 @@ export function InsertUsers(data) {
                 }
             }, 500));
         }
-        //create a div for typing progress for all userConnect
-        let avatar = document.getElementById("topAvatar")
-        let divType = document.createElement("div")
-        divType.classList = 'chat-bubble';
-        divType.innerHTML = `<div class="typing">
-                             <div class="anime"></div>
-                                 <div class="anime"></div>
-                                 <div class="anime"></div>
-                                     </div>`
-        avatar.appendChild(divType)
+
+
     }
 }
 

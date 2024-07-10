@@ -17,6 +17,7 @@ type message struct {
 	Sender   string
 	Receiver string
 	Read     bool
+	Notyping bool
 }
 type Online struct {
 	Type        string
